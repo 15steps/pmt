@@ -1,7 +1,13 @@
 package shiftor
 
+var mask = [128]int{0: ^0}
+
 func Search(txt string, pat string) (occ []int) {
-	mask := buildMask(pat)
+	// make it faster by reusing mask
+	if mask[0] == ^0 {
+		mask = buildMask(pat)
+	}
+
 	m := len(pat)
 	n := len(txt)
 	s := 1 << uint(m)
