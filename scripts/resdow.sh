@@ -24,7 +24,7 @@ resources=(
 )
 
 cur_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-cur_dir+="/../data"
+cur_dir+="/../corpora"
 output=$(dir_resolve "${cur_dir}")
 cd "$output" || exit 1
 
