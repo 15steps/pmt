@@ -28,7 +28,6 @@ func buildMask(pat string) (mask [128]int) {
 	m := len(pat)
 	stamp := 1 << uint(m)
 
-
 	init :=  (1 << uint(m)) - 1
 	for i := 0; i < 128; i++ {
 		mask[i] = init
