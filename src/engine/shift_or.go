@@ -1,11 +1,14 @@
 package shiftor
 
-var mask = [128]int{0: ^0}
+var cached = false
+type ShiftOr struct {
+	mask [128]int
+}
 
-func Search(txt string, pat string) (occ []int) {
+func (so *ShiftOr) Search(txt string, pat string) (occ []int) {
 	// make it faster by reusing mask
-	if mask[0] == ^0 {
-		mask = buildMask(pat)
+	if !cached {
+		so.mask = buildMask(pat)
 	}
 
 	m := len(pat)
@@ -14,7 +17,7 @@ func Search(txt string, pat string) (occ []int) {
 
 	for i := 0; i < n; i++ {
 		s <<= 1
-		s |= mask[txt[i]]
+		s |= so.mask[txt[i]]
 
 		if (s >> uint(m - 1)) & 1 == 0 && i >= m {
 			occ = append(occ, i - m + 1)
@@ -39,6 +42,7 @@ func buildMask(pat string) (mask [128]int) {
 		mask[a] &= stamp
 		stamp = (stamp << 1) | 1
 	}
+	cached = true
 
 	return
 }

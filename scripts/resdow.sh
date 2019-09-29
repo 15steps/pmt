@@ -21,6 +21,7 @@ resources=(
   "http://pizzachili.dcc.uchile.cl/texts/nlang/english.50MB.gz"
   "http://pizzachili.dcc.uchile.cl/texts/nlang/english.200MB.gz"
   "http://pizzachili.dcc.uchile.cl/texts/nlang/english.1024MB.gz"
+  "https://raw.githubusercontent.com/oknotok97/if76720192/master/data/shakespeare.txt"
 )
 
 cur_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
