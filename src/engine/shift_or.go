@@ -1,25 +1,36 @@
-package shiftor
+package engine
 
-var cached = false
-type ShiftOr struct {
+type shiftOr struct {
 	mask [128]int
+	shouldBuildMask bool
 }
 
-func (so *ShiftOr) Search(txt string, pat string) (occ []int) {
+func NewShiftOr() SearchEngine {
+	return &shiftOr{
+		shouldBuildMask: true,
+	}
+}
+
+func (so *shiftOr) Search(txt string, pat string) (occ []int) {
 	// make it faster by reusing mask
-	if !cached {
+	if so.shouldBuildMask {
 		so.mask = buildMask(pat)
+		so.shouldBuildMask = false
 	}
 
 	m := len(pat)
 	n := len(txt)
-	s := 1 << uint(m)
+	s := (1 << uint(m)) - 1
 
 	for i := 0; i < n; i++ {
+		// non ascii is not supported yet
+		if txt[i] >= 128 {
+			continue
+		}
 		s <<= 1
 		s |= so.mask[txt[i]]
 
-		if (s >> uint(m - 1)) & 1 == 0 && i >= m {
+		if (s >> uint(m - 1)) & 1 == 0 && i >= m - 1 {
 			occ = append(occ, i - m + 1)
 		}
 	}
@@ -42,7 +53,6 @@ func buildMask(pat string) (mask [128]int) {
 		mask[a] &= stamp
 		stamp = (stamp << 1) | 1
 	}
-	cached = true
 
 	return
 }
