@@ -3,6 +3,7 @@ package cmd
 import (
 	"errors"
 	"fmt"
+	"github.com/oknotok97/pmt/src/engine"
 	"github.com/urfave/cli"
 	"log"
 	"os"
@@ -16,10 +17,6 @@ const  (
 	Count = "count"
 )
 
-// algorithms
-const (
-	ShiftOr = "shiftor"
-)
 
 func BuildCli() {
 	app := cli.NewApp()
@@ -55,18 +52,15 @@ func BuildCli() {
 
 	app.Action = func(c *cli.Context) error {
 		pattern := c.Args().First()
-		files := c.Args().Tail()
-		if algorithm := c.String(Algorithm); algorithm == "" {
-			algorithm = ShiftOr
-		}
+		files := c.Args().Tail() // remove flags
+		algorithm := c.String(Algorithm)
         if len(pattern) == 0 {
         	return errors.New("a pattern is required")
 		}
 		if len(files) == 0 {
 			return errors.New("a least one file is required")
 		}
-		fmt.Printf("searching for %s in %v, %s\n", pattern, files, c.String(Algorithm))
-		return nil
+		return engine.SearchHandler(pattern, files, algorithm)
 	}
 
 	err := app.Run(os.Args)
